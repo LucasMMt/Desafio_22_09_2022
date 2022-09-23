@@ -1,0 +1,155 @@
+import React, { useState } from 'react';
+
+
+// This holds a list of some fiction people
+// Some  have the same name but different age and id
+const USERS = [
+  { id: 1, name: 'Star Trek: Short Treks', age: 32 },
+  { id: 2, name: 'Star Trek: Picard', age: 30 },
+  { id: 3, name: 'Star Trek: Discovery', age: 40 },
+  { id: 4, name: 'Star Trek: Prodigy', age: 50 },
+  { id: 5, name: 'Star Trek: Enterprise', age: 30 },
+  { id: 6, name: 'Star Trek: Voyager', age: 68 },
+  { id: 7, name: 'Star Trek: Odyssey', age: 34 },
+  { id: 8, name: 'Star Trek: Lower Decks', age: 28 },
+  { id: 9, name: 'Star Trek: Section 31', age: 23 },
+];
+
+function App() {
+  // the value of the search field 
+  const [name, setName] = useState('');
+
+  // the search result
+  const [foundUsers, setFoundUsers] = useState(USERS);
+
+  const filter = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = USERS.filter((user) => {
+        return user.name.toLowerCase().startsWith(keyword.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
+      });
+      setFoundUsers(results);
+    } else {
+      setFoundUsers(USERS);
+      // If the text field is empty, show all users
+    }
+
+    setName(keyword);
+  };
+
+  return (
+    <div className="container">
+      <input
+        type="search"
+        value={name}
+        onChange={filter}
+        className="input"
+        placeholder="Filter"
+      />
+
+      <div className="user-list">
+        {foundUsers && foundUsers.length > 0 ? (
+          foundUsers.map((user) => (
+            <li key={user.id} className="user">
+              
+              <span className="user-name">{user.name}</span>
+              <span className="user-age">{user.age} year old</span>
+            </li>
+          ))
+        ) : (
+          <h1>No results found!</h1>
+        )}
+      </div>
+    </div>
+  );
+}
+export default App;
+
+
+
+
+
+
+
+========================================================
+
+
+
+import React, { Component } from 'react';
+import api from './api';
+
+
+/* 1. Criaremos uma classe para nossa aplicação e
+damos o extends em Component. Observe que agora
+é adicionado no import. */
+class App extends Component {
+
+  // 3. Criamos um state para armazenar os filmes
+  state = {
+    filmes: [],
+  }
+
+  /* 4. Vamos adicionar um componente para buscar
+  os dados na API. */
+  async componentDidMount() {
+    /* 5. Veja que a constante response utiliza o await
+    porque usamos async. */
+    const response = await api.get('');
+
+    /* Colocamos o console log para poder inspecionar
+    os elementos para debug, mas não é utilizado na 
+    aplicação*/
+    //console.log(response.data);
+
+    // 6. jovar os valores recebidos para filmes
+    this.setState({ filmes: response.data });
+  }
+
+  // 2. Criamos nosso render
+  render() {
+    /* 7. Vamos buscar os dados de this.state e jogar para
+    a posição filmes*/
+    const { filmes } = this.state;
+
+    return (
+      <div>
+        <h1>Filmes</h1>
+
+<div class="input-group">
+  <div class="form-outline">
+    <input type="search" id="form1" class="form-control" />
+  </div>
+  <button type="button" class="btn btn-primary">
+    <span>Button</span>
+  </button>
+</div>
+        
+        { console.log(filmes)}
+
+        {/* 8. Como temos uma array, então vamos usar um maps
+        para percorrê-la. Vejaj que temos que ver no resultado
+        da API os atributos que vamos mostrar, como name e url.*/}
+        {filmes.map(filme => (
+          <li key={filme.show.id}>
+            <h2>
+              {filme.show.name}
+            </h2>
+            <p><a href={filme.show.url} target="_blank">
+              {filme.show.url}</a></p>
+          </li>
+        ))}
+      </div>
+    );
+  }
+}export default App;
+
+
+
+
+
+
+
+
+
